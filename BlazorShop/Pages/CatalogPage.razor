@@ -1,0 +1,25 @@
+﻿@page "/CatalogPage"
+@using HttpApiClient
+@using Models
+@inject ApiClient _apiClient
+
+<h3>Catalog</h3>
+@if (_products != null)
+{
+    @foreach (var product in _products)
+    {
+        <p>@product.Name <img src="@product.Url" alt=""/></p>
+    }
+}
+
+@code {
+    private IReadOnlyList<Product>? _products;
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _products = await _apiClient.GetProducts();
+    }
+
+}

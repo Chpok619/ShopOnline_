@@ -1,0 +1,50 @@
+﻿@page "/AddingProductPage"
+@using HttpApiClient
+@using Models
+
+@inject ApiClient _apiClient
+
+<h3>Adding Product</h3>
+@if (!IsAdd)
+{ 
+    @*<div hidden="@IsAdd"> *@
+    <EditForm Model="_product" OnValidSubmit="AddProduct" hidden="@IsAdd">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <p>Name</p>
+        <InputText @bind-Value="_product.Name"></InputText>
+
+        <p>Price</p>
+        <InputNumber @bind-Value="_product.Price"></InputNumber>
+
+        <p>Image</p>
+        <InputText @bind-Value="_product.Url"></InputText>
+
+        <input type="submit" name="addbutton" value="Add"/>
+    </EditForm>
+    @* </div> *@
+}
+else
+{
+    <p>Added!</p>
+}
+
+@code {
+    private readonly Product _product = new Product();
+    private bool IsAdd { get; set; }
+
+    private async void AddProduct()
+    {
+        await _apiClient.AddProduct(_product);
+
+        IsAdd = true;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        IsAdd = false;
+    }
+}

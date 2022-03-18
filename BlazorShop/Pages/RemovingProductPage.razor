@@ -1,0 +1,49 @@
+﻿@page "/RemovingProductPage"
+@using Models
+@using HttpApiClient
+@using System.Diagnostics
+
+@inject ApiClient _apiClient
+ 
+<h3>Removing Product</h3>
+
+@* <EditForm Model="_product" OnValidSubmit="RemoveProduct"> *@
+@*     <DataAnnotationsValidator/> *@
+@*     <ValidationSummary/> *@
+@*      *@
+@*     <p>Name</p> *@
+@*     <InputText @bind-Value="_product.Name"></InputText> *@
+@*      *@
+@*     <input type="submit" name="removebutton" value="Remove"/> *@
+@* </EditForm> *@
+
+<EditForm Model="_product" OnValidSubmit="RemoveProduct">
+        <DataAnnotationsValidator/>
+        <ValidationSummary/>
+
+        <p>Name</p>
+        <InputText @bind-Value="_product.Name"></InputText>
+
+        <p>Price</p>
+        <InputNumber @bind-Value="_product.Price"></InputNumber>
+
+        <p>Image</p>
+        <InputText @bind-Value="_product.Url"></InputText>
+
+        <input type="submit" name="addbutton" value="Remove"/>
+    </EditForm>
+
+@code {
+    private readonly Product _product = new Product();
+
+    private async void RemoveProduct()
+    {
+        await _apiClient.RemoveProduct(_product);
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+    }
+
+}
