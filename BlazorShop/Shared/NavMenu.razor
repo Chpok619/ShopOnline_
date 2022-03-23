@@ -1,4 +1,8 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Models
+@inject CountProducts _countProducts
+@implements IDisposable
+
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
         <a class="navbar-brand" href="">BlazorShop</a>
         <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
@@ -30,6 +34,11 @@
             </NavLink>
         </div>
         <div class="nav-item px-3">
+            <NavLink class="nav-link" href="cartpage">
+                <span class="oi oi-list-rich" aria-hidden="true"></span> Cart: <span class="text-warning"> @_countProducts.Count</span>
+            </NavLink>
+        </div>
+        <div class="nav-item px-3">
             <NavLink class="nav-link" href="addingproductpage">
                 <span class="oi oi-list-rich" aria-hidden="true"></span> Add Product
             </NavLink>
@@ -50,6 +59,18 @@
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        _countProducts.OnChange += StateHasChanged;
+    }
+
+    public void Dispose()
+    {
+        _countProducts.OnChange -= StateHasChanged;
     }
 
 }

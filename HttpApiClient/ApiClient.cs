@@ -16,9 +16,15 @@ public class ApiClient
 
     public Task<IReadOnlyList<Product>?> GetProducts() => _client.GetFromJsonAsync<IReadOnlyList<Product>>($"{_host}/catalog/get_products");
 
-    public Task<Product?> GetProductById(Guid id) => _client.GetFromJsonAsync<Product>($"{_host}/catalog/get_product_by_id?id={id}");
+    public Task<Product?> FindProductByName(string name) =>
+        _client.GetFromJsonAsync<Product>($"{_host}/catalog/get_product_by_name?name={name}");
 
-    public Task AddProduct(Product product) => _client.PostAsJsonAsync($"{_host}/catalog/add_product", product);
+    public Task AddProduct(Product product) => 
+        _client.PostAsJsonAsync($"{_host}/catalog/add_product", product);
 
-    public Task RemoveProduct(Product product) => _client.PostAsJsonAsync($"{_host}/catalog/remove_product", product);
+    public Task RemoveProduct(Product product) => 
+        _client.PostAsJsonAsync($"{_host}/catalog/remove_product", product);
+
+    public Task RegistrationAccount(Account account) =>
+        _client.PostAsJsonAsync($"{_host}/account/registration_account", account);
 }

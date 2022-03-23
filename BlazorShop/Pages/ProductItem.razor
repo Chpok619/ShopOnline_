@@ -1,0 +1,12 @@
+﻿@using Models
+
+<img src="@Product?.Url"/>
+<div>
+    <p>Name: @Product?.Name</p>
+    <p>Price: @Product?.Price</p>
+</div>
+
+@code {
+    [Parameter]
+    public Product? Product { get; set; }
+}

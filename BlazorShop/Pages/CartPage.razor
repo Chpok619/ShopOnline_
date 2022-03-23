@@ -1,0 +1,58 @@
+﻿@page "/CartPage"
+@using Models
+
+@inject ICartForShop _cart
+@inject CountProducts _countProducts
+
+<h3>Cart</h3>
+
+@if (_products.Count == 0)
+{
+    <p>Cart is empty</p>
+}
+else
+{
+    <button @onclick="RemoveAll">Remove all</button>
+    
+@foreach (var product in _products)
+{
+    <p>@product.Name: @product.Price - <a href="/ProductCard/@product.Id"><img src="@product.Url"/></a>
+        <button @onclick="() => AddToCart(product)">Add</button><button @onclick="() => RemoveFromCart(product)">Remove</button></p>
+}
+}
+
+@code {
+    private IReadOnlyList<Product>? _products;
+    
+    protected override void OnInitialized()
+    {
+        _products = _cart.GetCart();
+    }
+    
+    private void AddToCart(Product prod)
+    {
+        _cart.AddToCart(prod);
+
+        _products = _cart.GetCart();
+
+        _countProducts.Count++;
+    }
+    
+    private void RemoveFromCart(Product prod)
+    {
+        _cart.RemoveFromCart(prod);
+
+        _products = _cart.GetCart();
+
+        _countProducts.Count--;
+    }
+
+    private void RemoveAll()
+    {
+        _cart.RemoveAllProducts();
+
+        _products = _cart.GetCart();
+
+        _countProducts.Count = 0;
+    }
+}

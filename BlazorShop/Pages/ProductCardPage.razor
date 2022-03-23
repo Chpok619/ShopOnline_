@@ -1,0 +1,23 @@
+﻿@page "/ProductCardPage/{ProductName:int}"
+@using Models
+@using HttpApiClient
+
+@inject ApiClient _apiClient 
+
+<h3>Product Card</h3>
+
+<ProductItem Product="@Product"/>
+
+@code {
+    [Parameter]
+    public string ProductName { get; set; }
+
+    private Product? Product { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+
+        Product = await _apiClient.FindProductByName(ProductName);
+    }
+}

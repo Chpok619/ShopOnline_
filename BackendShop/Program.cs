@@ -11,6 +11,8 @@ builder.Services.AddDbContext<AppDbContext>(
 
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<ProductService>();
+builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+builder.Services.AddScoped<AccountService>();
 
 builder.Services.AddCors();
 builder.Services.AddControllers();

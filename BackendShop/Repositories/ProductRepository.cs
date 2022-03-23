@@ -12,14 +12,14 @@ public class ProductRepository: IProductRepository
         _appDbContext = appDbContext;
     }
     
-    public async Task<Product> GetProductById(Guid id)
+    public async Task<Product> GetByName(Guid id)
     {
         return await _appDbContext.Products.Where(product => product.Id == id).FirstAsync();
     }
 
-    public async Task<Product?> FindProductByName(string name)
+    public async Task<Product?> FindByName(string name)
     {
-        return await _appDbContext.Products.FindAsync(name);
+        return await _appDbContext.Products.FirstOrDefaultAsync(product => product.Name == name);
     }
 
     public async Task Add(Product product)

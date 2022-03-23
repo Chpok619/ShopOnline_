@@ -1,0 +1,39 @@
+﻿@page "/RegistrationAccountPage"
+@using Models
+@using HttpApiClient
+@inject ApiClient _apiClient
+
+<h3>Registration</h3>
+
+<EditForm Model="_account" OnValidSubmit="Registration">
+    <DataAnnotationsValidator/>
+    <ValidationSummary/>
+
+    <p>Login</p>
+    <InputText @bind-Value="_account.Login"></InputText>
+
+    <p>Email</p>
+    <InputText @bind-Value="_account.Email"></InputText>
+
+    <p>Password</p>
+    <InputText @bind-Value="_account.Password"></InputText>
+
+    <input type="submit" name="registrationbutton" value="Registrate"/>
+</EditForm>
+
+@if (IsRegistrated)
+{
+    <p style="font-size: 30px"><b>Registrated</b></p>
+}
+
+@code {
+    private readonly Account _account = new Account();
+    private bool IsRegistrated = false;
+
+    private async Task Registration()
+    {
+        await _apiClient.RegistrationAccount(_account);
+        
+        IsRegistrated = true;
+    }
+}

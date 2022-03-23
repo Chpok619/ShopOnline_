@@ -7,16 +7,6 @@
  
 <h3>Removing Product</h3>
 
-@* <EditForm Model="_product" OnValidSubmit="RemoveProduct"> *@
-@*     <DataAnnotationsValidator/> *@
-@*     <ValidationSummary/> *@
-@*      *@
-@*     <p>Name</p> *@
-@*     <InputText @bind-Value="_product.Name"></InputText> *@
-@*      *@
-@*     <input type="submit" name="removebutton" value="Remove"/> *@
-@* </EditForm> *@
-
 <EditForm Model="_product" OnValidSubmit="RemoveProduct">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
@@ -24,21 +14,23 @@
         <p>Name</p>
         <InputText @bind-Value="_product.Name"></InputText>
 
-        <p>Price</p>
-        <InputNumber @bind-Value="_product.Price"></InputNumber>
-
-        <p>Image</p>
-        <InputText @bind-Value="_product.Url"></InputText>
-
-        <input type="submit" name="addbutton" value="Remove"/>
+        <input type="submit" name="removebutton" value="Remove"/>
     </EditForm>
+
+@if (IsRemoved)
+{
+    <p style="font-size: 30px"><b>Removed!</b></p>
+}
 
 @code {
     private readonly Product _product = new Product();
+    private bool IsRemoved = false;
 
-    private async void RemoveProduct()
+    private async Task RemoveProduct()
     {
         await _apiClient.RemoveProduct(_product);
+
+        IsRemoved = true;
     }
 
     protected override async Task OnInitializedAsync()

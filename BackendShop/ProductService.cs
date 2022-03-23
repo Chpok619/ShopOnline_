@@ -14,12 +14,12 @@ public class ProductService
     
     public async Task<Product> GetProductById(Guid id)
     {
-        return await _productRepository.GetProductById(id);
+        return await _productRepository.GetByName(id);
     }
     
     public async Task<Product?> FindProductByName(string name)
     {
-        return await _productRepository.FindProductByName(name);
+        return await _productRepository.FindByName(name);
     }
     
     public async Task AddProduct(Product product)
@@ -31,9 +31,16 @@ public class ProductService
 
     public async Task RemoveProduct(Product product)
     {
-        Product? newProduct = await _productRepository.FindProductByName(product.Name);
-        
-        await _productRepository.Remove(newProduct);
+        Product? newProduct = await _productRepository.FindByName(product.Name);
+
+        if (newProduct != null)
+        {
+            await _productRepository.Remove(newProduct);
+        }
+        else
+        {
+            throw new Exception();
+        }
     }
     
     public async Task<IReadOnlyList<Product>> GetProducts()
