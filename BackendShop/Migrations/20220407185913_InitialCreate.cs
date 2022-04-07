@@ -5,18 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ShopBackend.Migrations
 {
-    public partial class AddAccount : Migration
+    public partial class InitialCreate : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Products",
-                type: "TEXT",
-                nullable: true,
-                oldClrType: typeof(string),
-                oldType: "TEXT");
-
             migrationBuilder.CreateTable(
                 name: "Accounts",
                 columns: table => new
@@ -24,11 +16,25 @@ namespace ShopBackend.Migrations
                     Id = table.Column<Guid>(type: "TEXT", nullable: false),
                     Login = table.Column<string>(type: "TEXT", nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false),
-                    Password = table.Column<string>(type: "TEXT", nullable: false)
+                    PasswordHash = table.Column<string>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Accounts", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Products",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "TEXT", nullable: false),
+                    Name = table.Column<string>(type: "TEXT", nullable: true),
+                    Price = table.Column<decimal>(type: "TEXT", nullable: false),
+                    Url = table.Column<string>(type: "TEXT", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Products", x => x.Id);
                 });
         }
 
@@ -37,15 +43,8 @@ namespace ShopBackend.Migrations
             migrationBuilder.DropTable(
                 name: "Accounts");
 
-            migrationBuilder.AlterColumn<string>(
-                name: "Name",
-                table: "Products",
-                type: "TEXT",
-                nullable: false,
-                defaultValue: "",
-                oldClrType: typeof(string),
-                oldType: "TEXT",
-                oldNullable: true);
+            migrationBuilder.DropTable(
+                name: "Products");
         }
     }
 }

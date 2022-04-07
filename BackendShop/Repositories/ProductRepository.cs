@@ -25,13 +25,13 @@ public class ProductRepository: IProductRepository
     public async Task Add(Product product)
     {
         await _appDbContext.Products.AddAsync(product);
-        await _appDbContext.SaveChangesAsync();
+        //await _appDbContext.SaveChangesAsync();
     }
 
     public async Task Remove(Product product)
     {
         _appDbContext.Remove(product);
-        await _appDbContext.SaveChangesAsync();
+        //await _appDbContext.SaveChangesAsync();
     }
     public async Task<IReadOnlyList<Product>> GetProducts()
     {

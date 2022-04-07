@@ -5,7 +5,7 @@
 
 <h3>Registration</h3>
 
-<EditForm Model="_account" OnValidSubmit="Registration">
+<EditForm Model="_account" OnValidSubmit="Registration" hidden="@IsRegistrated">
     <DataAnnotationsValidator/>
     <ValidationSummary/>
 
@@ -32,7 +32,7 @@
 
     private async Task Registration()
     {
-        await _apiClient.RegistrationAccount(_account);
+        await _apiClient.Registration(_account);
         
         IsRegistrated = true;
     }

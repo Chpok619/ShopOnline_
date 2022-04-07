@@ -7,7 +7,7 @@
  
 <h3>Removing Product</h3>
 
-<EditForm Model="_product" OnValidSubmit="RemoveProduct">
+<EditForm Model="_product" OnValidSubmit="RemoveProduct" hidden="@IsRemoved">
         <DataAnnotationsValidator/>
         <ValidationSummary/>
 
@@ -20,6 +20,7 @@
 @if (IsRemoved)
 {
     <p style="font-size: 30px"><b>Removed!</b></p>
+    <button onclick="@EnableRemoveOneMore">Remove one more</button>
 }
 
 @code {
@@ -33,9 +34,5 @@
         IsRemoved = true;
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await base.OnInitializedAsync();
-    }
-
+    private void EnableRemoveOneMore() => IsRemoved = false;
 }

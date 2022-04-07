@@ -11,5 +11,5 @@ public class AppDbContext: DbContext
     }
     
     public DbSet<Product> Products => Set<Product>();
-    public DbSet<Account> Accounts => Set<Account>();
+    public DbSet<AccountDTO> Accounts => Set<AccountDTO>();
 }

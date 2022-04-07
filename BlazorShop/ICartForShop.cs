@@ -1,4 +1,6 @@
-﻿namespace Models;
+﻿using Models;
+
+namespace BlazorShop;
 
 public interface ICartForShop
 {
