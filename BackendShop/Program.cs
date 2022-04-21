@@ -15,83 +15,93 @@ Log.Logger = new LoggerConfiguration()
 
 Log.Information("Server start!");
 
-var builder = WebApplication.CreateBuilder(args);
+try
+{
 
-var dbPath = "myapp.db";
-builder.Services.AddDbContext<AppDbContext>(
-    option => option.UseSqlite($"Data Source={dbPath}")
-);
 
-JWTKey jwtKey = builder.Configuration.GetSection("JwtConfig").Get<JWTKey>();
-builder.Services.AddSingleton(jwtKey);
+    var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddScoped<IProductRepository, ProductRepository>();
-builder.Services.AddScoped<ProductService>();
-builder.Services.AddScoped<IAccountRepository, AccountRepository>();
-builder.Services.AddScoped<AccountService>();
-builder.Services.AddScoped<IUnitOfWork, UnitOfWorkEF>();
-builder.Services.AddSingleton<GenerateTokenService>();
-builder.Services.AddSingleton<IPasswordHasher<AccountDTO>, PasswordHasher<AccountDTO>>();
+    var dbPath = "myapp.db";
+    builder.Services.AddDbContext<AppDbContext>(
+        option => option.UseSqlite($"Data Source={dbPath}")
+    );
 
-builder.Services.AddCors();
-builder.Services.AddControllers();
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+    JWTKey jwtKey = builder.Configuration.GetSection("JwtConfig").Get<JWTKey>();
+    builder.Services.AddSingleton(jwtKey);
 
-builder.Services.AddAuthentication(option =>
-    {
-        option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-        option.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
-        option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-    })
-    .AddJwtBearer(option =>
-    {
-        option.TokenValidationParameters = new TokenValidationParameters
+    builder.Services.AddScoped<IProductRepository, ProductRepository>();
+    builder.Services.AddScoped<ProductService>();
+    builder.Services.AddScoped<IAccountRepository, AccountRepository>();
+    builder.Services.AddScoped<AccountService>();
+    builder.Services.AddScoped<IUnitOfWork, UnitOfWorkEF>();
+    builder.Services.AddSingleton<GenerateTokenService>();
+    builder.Services.AddSingleton<IPasswordHasher<AccountDTO>, PasswordHasher<AccountDTO>>();
+
+    builder.Services.AddCors();
+    builder.Services.AddControllers();
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddAuthentication(option =>
         {
-            IssuerSigningKey = new SymmetricSecurityKey(jwtKey.SigningKeyBytes),
-            ValidateIssuerSigningKey = true,
-            ValidateLifetime = true,
-            RequireExpirationTime = true,
-            RequireSignedTokens = true,
+            option.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+            option.DefaultSignInScheme = JwtBearerDefaults.AuthenticationScheme;
+            option.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+        })
+        .AddJwtBearer(option =>
+        {
+            option.TokenValidationParameters = new TokenValidationParameters
+            {
+                IssuerSigningKey = new SymmetricSecurityKey(jwtKey.SigningKeyBytes),
+                ValidateIssuerSigningKey = true,
+                ValidateLifetime = true,
+                RequireExpirationTime = true,
+                RequireSignedTokens = true,
 
-            ValidateIssuer = true,
-            ValidIssuer = jwtKey.Issuer
-        };
+                ValidateIssuer = true,
+                ValidIssuer = jwtKey.Issuer
+            };
+        });
+    builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
+    builder.Services.AddControllers(options => { options.Filters.Add<ExceptionFilter>(); });
+
+    builder.Services.AddAuthorization();
+
+    var app = builder.Build();
+
+    app.UseCors(policy =>
+    {
+        policy
+            .AllowAnyMethod()
+            .AllowAnyHeader()
+            .WithOrigins("https://localhost:7087")
+            .AllowCredentials();
     });
-builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
-builder.Services.AddControllers(options =>
-{
-    options.Filters.Add<ExceptionFilter>();
-});
+    app.MapControllers();
 
-builder.Services.AddAuthorization();
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
 
-var app = builder.Build();
+    app.UseAuthentication();
+    app.UseAuthorization();
 
-app.UseCors(policy =>
-{
-    policy
-        .AllowAnyMethod()
-        .AllowAnyHeader()
-        .WithOrigins("https://localhost:7087")
-        .AllowCredentials();
-});
-app.MapControllers();
+    app.UseMiddleware<ResponseMiddleware>();
+    app.UseMiddleware<RequastMiddleware>();
 
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    app.MapGet("/", () => "Hello World!");
+
+    app.Run();
 }
-
-app.UseAuthentication();
-app.UseAuthorization();
-
-app.UseMiddleware<ResponseMiddleware>();
-app.UseMiddleware<RequastMiddleware>();
-
-app.MapGet("/", () => "Hello World!");
-
-app.Run();
-
-Log.Information("Server stop!");
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Some exception!");
+    throw;
+}
+finally
+{
+    Log.Information("Server stop!");
+    Log.CloseAndFlush();
+}
