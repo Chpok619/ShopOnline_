@@ -2,9 +2,18 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Serilog;
 using ShopBackend;
+using ShopBackend.Filters;
+using ShopBackend.Middlewares;
 using ShopBackend.Repositories;
 using ShopBackend.UnitOfWork;
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .CreateBootstrapLogger();
+
+Log.Information("Server start!");
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +58,12 @@ builder.Services.AddAuthentication(option =>
             ValidIssuer = jwtKey.Issuer
         };
     });
+builder.Host.UseSerilog((context, config) => config.ReadFrom.Configuration(context.Configuration));
+builder.Services.AddControllers(options =>
+{
+    options.Filters.Add<ExceptionFilter>();
+});
+
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
@@ -72,6 +87,11 @@ if (app.Environment.IsDevelopment())
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.UseMiddleware<ResponseMiddleware>();
+app.UseMiddleware<RequastMiddleware>();
+
 app.MapGet("/", () => "Hello World!");
 
 app.Run();
+
+Log.Information("Server stop!");

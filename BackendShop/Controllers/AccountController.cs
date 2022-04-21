@@ -24,21 +24,10 @@ public class AccountController: ControllerBase
     [HttpPost("signin")]
     public async Task<ActionResult<LoginResponse>> SignIn(LoginRequest request)
     {
-        try
-        {
-            var (account, token) = await _accountService.SignIn( request.Login, request.Password );
-            
-            var loginResponse = new LoginResponse() { Account = account, Token = token};
-            
-            return loginResponse;
-        }
-        catch (AccountNotFoundException)
-        {
-            return Unauthorized("Account not found");
-        }
-        catch (IncorrectPasswordException)
-        {
-            return Unauthorized("Incorrect password");
-        }
+        var (account, token) = await _accountService.SignIn( request.Login, request.Password );
+        
+        var loginResponse = new LoginResponse() { Account = account, Token = token};
+        
+        return loginResponse;
     }
 }

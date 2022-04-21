@@ -8,6 +8,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Models", "Models\Models.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BackendShop", "BackendShop\BackendShop.csproj", "{8333375B-70C4-4C2E-BFB5-0E489B3F8055}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShopOnline.Tests", "ShopOnline.Tests\ShopOnline.Tests.csproj", "{29B16AAD-05D7-4149-8F98-B1FCB9131828}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -30,5 +32,9 @@ Global
 		{8333375B-70C4-4C2E-BFB5-0E489B3F8055}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8333375B-70C4-4C2E-BFB5-0E489B3F8055}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8333375B-70C4-4C2E-BFB5-0E489B3F8055}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B16AAD-05D7-4149-8F98-B1FCB9131828}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B16AAD-05D7-4149-8F98-B1FCB9131828}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B16AAD-05D7-4149-8F98-B1FCB9131828}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B16AAD-05D7-4149-8F98-B1FCB9131828}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
